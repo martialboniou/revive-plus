@@ -6,9 +6,9 @@
 ;; Maintainer: Martial Boniou
 ;; Created: Thu Mar 10 12:12:09 2011 (+0100)
 ;; Version: 0.9
-;; Last-Updated: Thu Nov 24 18:04:58 2011 (+0100)
+;; Last-Updated: Thu Nov 24 22:14:25 2011 (+0100)
 ;;           By: Martial Boniou
-;;     Update #: 162
+;;     Update #: 166
 ;; URL: https://github.com/martialboniou/revive-plus.git
 ;; Keywords: window configuration serialization
 ;; Compatibility:
@@ -356,7 +356,9 @@ escreen."
            (unless single-frame (setq single-frame (selected-frame)))
            (let ((confs (mapcar 
                          #'(lambda (num)
+                             (message "num: %s" (number-to-string num))
                              (let ((data (escreen-configuration-escreen num)))
+                               (escreen-save-current-screen-configuration) ; ensure to refresh screen to avoid broken map
                                (escreen-restore-screen-map data))
                              (let ((curwin (frame-selected-window single-frame)))
                                (let ((wlist (revive:window-list single-frame))
@@ -578,17 +580,13 @@ and restoring for a single frame."
 reload. Frame and Escreen are maintained if REVIVE-PLUS:ALL-FRAMES is true.
 Frames are merged to escreen when Emacs is started in NO-WINDOW-SYSTEM context."
   (when (boundp 'desktop-save-hook)
-    ;; (add-hook 'desktop-save-hook
-    ;;           ;; prevent crashes' loss if DESKTOP is autosaved
-    ;;           #'revive-plus:save-window-configuration 'append))
-  ;; (add-hook 'kill-emacs-hook
-  ;;           ;; force window configuration special case like `ecb' if any
-  ;;           #'(lambda () (revive-plus:save-window-configuration t)) 'append)
-
-  (add-hook 'after-init-hook #'revive-plus:restore-window-configuration 'append)))
-
-;(remove-hook 'desktop-save-hook #'revive-plus:save-window-configuration)
-;(remove-hook 'kill-emacs-hook #'(lambda () (revive-plus:save-window-configuration t)))
+    (add-hook 'desktop-save-hook
+              ;; prevent crashes' loss if DESKTOP is autosaved
+              #'revive-plus:save-window-configuration 'append))
+  (add-hook 'kill-emacs-hook
+            ;; force window configuration special case like `ecb' if any
+            #'(lambda () (revive-plus:save-window-configuration t)) 'append)
+  (add-hook 'after-init-hook #'revive-plus:restore-window-configuration 'append))
 
 ;;;###autoload
 (defun revive-plus:demo ()
