@@ -90,21 +90,21 @@ those other frames is restored as new ESCREEN. Eg.:
 
 * `WINDOW-SYSTEM` (saving):
 
-    -------------     -------------     -----------
-    |  frame 2  |     |  frame 1  |     | frame 3 |
-    |           |  +  |           |  +  |         |
-    | ( 0 1 2 ) |     | ( 0 1 2 ) |     | ( 0 1 ) |
-    -------------     -------------     -----------
+        -------------     -------------     -----------
+        |  frame 2  |     |  frame 1  |     | frame 3 |
+        |           |  +  |           |  +  |         |
+        | ( 0 1 2 ) |     | ( 0 1 2 ) |     | ( 0 1 ) |
+        -------------     -------------     -----------
 
 where `frame 1` is the focused (aka. selected) frame and `( X Y )`s are the `ESCREEN`s.
 
 * `NO-WINDOW-SYSTEM` (restoring):
 
-    -----------------------
-    |     * no-frame *    |
-    |                     |
-    | ( 0 1 2 4 5 6 7 8 ) |
-    -----------------------
+        -----------------------
+        |     * no-frame *    |
+        |                     |
+        | ( 0 1 2 4 5 6 7 8 ) |
+        -----------------------
 
 where:
 
