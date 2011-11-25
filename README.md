@@ -8,7 +8,7 @@ Unfortunately `revive.el` doesn't provide frames support and other things useful
 Goal
 ====
 
-`Revive-plus` extends `revive.el` by enabling:
+`revive-plus` extends `revive.el` by enabling:
 
 * window focus memorization;
 * frames restoration;
@@ -18,31 +18,33 @@ Goal
 Install
 =======
 
-From `git`
-----------
+From git
+--------
 
-               git clone https://github.com/martialboniou/revive-plus.git
+    git clone https://github.com/martialboniou/revive-plus.git
 
-With `el-get`
--------------
+With el-get
+-----------
 
 Add this [recipe](https://github.com/martialboniou/el-get/blob/master/recipes/revive-plus.rcp) to your personal recipe directory.
 
 Remember that if you want to add a directory for `el-get` recipes, write:
 
-                (add-to-list 'el-get-recipe-path "<my-favorite-recipes-directory>")
+    (add-to-list 'el-get-recipe-path "<my-favorite-recipes-directory>")
+
+If you install this package with `el-get` or any auto-installer, you probably don't need to add the `(require revive+)` recommended in the following setup as the main interactive or setup functions are made available to *autoloading*.
 
 Setup
 =====
 
-               (require 'revive+)
-               (revive-plus:demo)
+    (require 'revive+) ; may be optional
+    (revive-plus:demo)
 
 You may customize revive-plus:all-frames to save all frames:
 
-               (require 'revive+)
-               (setq revive-plus:all-frames t)
-               (revive-plus:demo)
+    (require 'revive+) ; may be optional
+    (setq revive-plus:all-frames t)
+    (revive-plus:demo)
 
 Usage
 =====
@@ -54,7 +56,7 @@ used for this. If you want to prevent crashes by periodically
 autosave the latest window configuration you just need to ensure
 `desktop` is auto-saved:
 
-                (add-hook 'auto-save-hook #'(lambda () (call-interactively #'desktop-save)))
+    (add-hook 'auto-save-hook #'(lambda () (call-interactively #'desktop-save)))
 
 Remember: there are two functions to save window configurations:
 
@@ -88,21 +90,21 @@ those other frames is restored as new ESCREEN. Eg.:
 
 * `WINDOW-SYSTEM` (saving):
 
-        -------------     -------------     -----------
-        |  frame 2  |     |  frame 1  |     | frame 3 |
-        |           |  +  |           |  +  |         |
-        | ( 0 1 2 ) |     | ( 0 1 2 ) |     | ( 0 1 ) |
-        -------------     -------------     -----------
+    -------------     -------------     -----------
+    |  frame 2  |     |  frame 1  |     | frame 3 |
+    |           |  +  |           |  +  |         |
+    | ( 0 1 2 ) |     | ( 0 1 2 ) |     | ( 0 1 ) |
+    -------------     -------------     -----------
 
 where `frame 1` is the focused (aka. selected) frame and `( X Y )`s are the `ESCREEN`s.
 
 * `NO-WINDOW-SYSTEM` (restoring):
 
-        -----------------------
-        |     * no-frame *    |
-        |                     |
-        | ( 0 1 2 4 5 6 7 8 ) |
-        -----------------------
+    -----------------------
+    |     * no-frame *    |
+    |                     |
+    | ( 0 1 2 4 5 6 7 8 ) |
+    -----------------------
 
 where:
 
