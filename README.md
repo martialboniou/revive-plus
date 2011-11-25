@@ -18,6 +18,23 @@ Goal
 Install
 =======
 
+From `git`
+----------
+
+               git clone https://github.com/martialboniou/revive-plus.git
+
+With `el-get`
+-------------
+
+Add this [recipe](https://github.com/martialboniou/el-get/blob/master/recipes/revive-plus.rcp) to your personal recipe directory.
+
+Remember that if you want to add a directory for `el-get` recipes, write:
+
+                (add-to-list 'el-get-recipe-path "<my-favorite-recipes-directory>")
+
+Setup
+=====
+
                (require 'revive+)
                (revive-plus:demo)
 
