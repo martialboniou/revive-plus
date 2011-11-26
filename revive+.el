@@ -6,9 +6,9 @@
 ;; Maintainer: Martial Boniou
 ;; Created: Thu Mar 10 12:12:09 2011 (+0100)
 ;; Version: 0.9
-;; Last-Updated: Thu Nov 24 22:14:25 2011 (+0100)
+;; Last-Updated: Sat Nov 26 18:16:23 2011 (+0100)
 ;;           By: Martial Boniou
-;;     Update #: 166
+;;     Update #: 173
 ;; URL: https://github.com/martialboniou/revive-plus.git
 ;; Keywords: window configuration serialization
 ;; Compatibility:
@@ -356,7 +356,6 @@ escreen."
            (unless single-frame (setq single-frame (selected-frame)))
            (let ((confs (mapcar 
                          #'(lambda (num)
-                             (message "num: %s" (number-to-string num))
                              (let ((data (escreen-configuration-escreen num)))
                                (escreen-save-current-screen-configuration) ; ensure to refresh screen to avoid broken map
                                (escreen-restore-screen-map data))
@@ -384,8 +383,14 @@ escreen."
                                    (setq wlist (cdr wlist)))
                                  (select-window curwin)
                                  (list (revive:screen-width) (revive:screen-height) edges buflist))))
-                         (escreen-get-active-screen-numbers))))
-             (cons (escreen-get-current-screen-number) confs)))))
+                         (if (and (boundp 'revive-plus:only-windows) ; FIXME: ugly / wconf-archive-save forgotten
+                                  revive-plus:only-windows)
+                             (list (escreen-get-current-screen-number))
+                           (escreen-get-active-screen-numbers)))))
+             (if (and (boundp 'revive-plus:only-windows)
+                      revive-plus:only-windows)
+                 confs
+               (cons (escreen-get-current-screen-number) confs))))))
 
      (defadvice restore-window-configuration (around escreen-extension (config) activate)
        (if (listp (car config))         ; new multiple frame case
@@ -434,7 +439,9 @@ don't want to register the mark."
 (defun revive-plus:wconf-archive-save (&optional dont-alert)
   (interactive)
   (when (or dont-alert (y-or-n-p "Archive the current window configuration? "))
-    (setq revive-plus:wconf-archive (cons (current-window-configuration-printable)
+    (setq revive-plus:wconf-archive (cons (let ((revive-plus:only-windows t))
+                                            ;; ensure to get only windows (no ESCREENs by example)
+                                            (current-window-configuration-printable))
                                           revive-plus:wconf-archive))
     (let ((out-num (- (length revive-plus:wconf-archive) revive-plus:wconf-archive-limit)))
       (nbutlast revive-plus:wconf-archive out-num))
@@ -461,14 +468,17 @@ don't want to register the mark."
    (if (and current-prefix-arg (not (consp current-prefix-arg)))
        (list (prefix-numeric-value current-prefix-arg))
      (list (read-number "Which window configuration number (0 is the last saved one): "))))
-  (when (or (not (integerp num))
-            (< num 0))
-    (setq num 0))
-  (let ((wconf (if (>= num (length revive-plus:wconf-archive))
-                   (last revive-plus:wconf-archive)
-                 (nth num revive-plus:wconf-archive))))
-    (unless (null wconf)
-      (restore-window-configuration wconf))))
+  (if (null revive-plus:wconf-archive)
+      (message "revive-plus: no window configuration archived")
+    (progn
+      (when (or (not (integerp num))
+                (< num 0))
+        (setq num 0))
+      (let ((wconf (if (>= num (length revive-plus:wconf-archive))
+                       (last revive-plus:wconf-archive)
+                     (nth num revive-plus:wconf-archive))))
+        (unless (null wconf)
+          (restore-window-configuration wconf))))))
 
 (defun revive-plus:wconf-archive-load-in-session ()
   (when (and (file-exists-p revive-plus:wconf-archive-file)
@@ -594,6 +604,7 @@ Frames are merged to escreen when Emacs is started in NO-WINDOW-SYSTEM context."
 configuration reload and single window switching key."
   (global-set-key (kbd "<f5><f5>") #'revive-plus:toggle-single-window)
   (revive-plus:start-wconf-archive t)
+
   (revive-plus:start-last-wconf t))
 
 ;;;###autoload
