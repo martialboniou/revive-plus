@@ -1,4 +1,4 @@
-;;; revive+.el ---
+;;; revive+.el --- Selected window memoization for revive
 ;;
 ;; Filename: revive+.el
 ;; Description: Selected window memoization for revive
@@ -15,7 +15,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Commentary: Let revive preserve the window focus to restore
+;;; Commentary:
+;;              Let revive preserve the window focus to restore
 ;;              Support frames restoring in the printable window configuration
 ;;              Support escreen restoring in the printable window configuration
 ;;              Support special case like `ecb'
@@ -33,7 +34,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Installation:
+;;  Installation:
 ;;               (require 'revive+)
 ;;               (revive-plus:demo)
 ;;
@@ -45,7 +46,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Usage:
+;;  Usage:
 ;;
 ;;        After calling (revive-plus:demo) or (revive-plus:minimal-setup),
 ;;        your window configuration is automatically saved on Emacs killing
